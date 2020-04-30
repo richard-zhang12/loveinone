@@ -1,0 +1,47 @@
+<%- include('partials/header') %>
+<div class="container mt-5 text-center">
+  <div class="row">
+     <div class="col-sm">
+          <!-- <h1 class="mt-4 ">Welcome!</h1> -->
+      </div>
+
+  <div class="col-sm">
+    <form action="/signup" method="POST">
+      <h1 class="mt-4">Sign Up</h1>          
+      <p class="text-center"> It's free and always will be </p>
+      <div class="row"> 
+        <div class="col">
+          <input type="text" name="firstname" class="form-control mt-4" placeholder="First Name" required>
+        </div>
+        <div class="col">
+          <input type="text" name="lastname" class="form-control mt-4" placeholder="Last Name" required>
+        </div>        
+      </div>    
+      <div class="mt-4">
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label>
+        <input type="radio" class="ml-4" id="female" name="gender" value="female">
+        <label for="female">Female</label> <br>
+      </div>
+      <input type="date" class="form-control mt-4">  
+      
+      <input type="email" name="email" class="form-control mt-4" placeholder="Email" required>
+      <input type="password" name="password" class="form-control mt-4" placeholder="Password" required>
+      
+      <p class="text-danger mt-2"><%= message %></p>
+
+      <div class="mt-4">
+      <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
+      </div>
+      </form>
+
+  </div>        
+    
+  <div class="col-sm"> 
+    </div>
+    
+  </div>
+</div> 
+
+
+<%- include('partials/header') %>

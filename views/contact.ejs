@@ -1,0 +1,52 @@
+<%- include('partials/header') %>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" >
+  <a class="navbar-brand" href="#">💑LoveInOne</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/dating">Dating</a>
+      </li>
+      <li class="nav-item active border-bottom">
+        <a class="nav-link" href="#">Contact</a>
+      </li>
+    </ul>
+    <a href="/login"> 
+      <button type="button" class="btn btn-outline-dark btn-block <%= loginDisplay %>">Login</button> 
+    </a>
+    <a href="/logout"> 
+      <button type="button" class="btn btn-outline-dark btn-block <%= logoutDisplay %>">Logout</button> 
+    </a>
+  </div>
+</nav>
+
+<form action="/contact" method="POST">
+  <div class="form-group">
+  <label for="fullname">Fullname</label>
+  <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Enter fullname">
+  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+</div>
+
+<div class="form-group">
+  <label for="exampleInputEmail1">Email address</label>
+  <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+</div>
+
+<div class="form-group">
+  <label for="message">Message</label>
+  <input type="text" name="message" class="form-control" id="message" placeholder="Type message..">
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+    </div>
+        
+  
+<%- include('partials/footer') %>
