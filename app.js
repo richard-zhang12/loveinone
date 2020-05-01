@@ -24,12 +24,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// mongoose.connect('mongodb://localhost:27017/userDB', {
 mongoose.connect(process.env.DB_MONGO, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  autoIndex: false
 });
-mongoose.set("useCreateIndex", true);
+// mongoose.set("useCreateIndex", true);
 const userSchema = new mongoose.Schema({
   email: String,
   firstname: String,
@@ -118,6 +120,7 @@ app.route("/signup")
   
   User.register({email, firstname, lastname}, password, function(err, user) {
     if (err) {
+      console.log(err);
       res.redirect("/signup");
     } else {
       passport.authenticate("local")(req, res, function() {
