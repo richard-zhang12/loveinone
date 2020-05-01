@@ -4,7 +4,8 @@
   "description": "LoveInOne Website",
   "main": "app.js",
   "scripts": {
-    "test": "\u001b\u001b"
+    "test": "\u001b\u001b",
+    "start": "node app.js"
   },
   "author": "Richard Zhang",
   "license": "ISC",
