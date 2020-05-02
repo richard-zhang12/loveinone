@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-const keys = require('./config/keys');
+// const keys = require('./config/keys');
 app.use(session({
   secret: 'Our little secret',
   resave: false,
@@ -23,7 +23,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(keys.MongoDB, {
+mongoose.connect('mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test?retryWrites=true&w=majority', {
 // mongoose.connect(process.env.DB_MONGO, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
