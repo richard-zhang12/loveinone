@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-const keys = require('./config/keys');
+// const keys = require('./config/keys');
 app.use(session({
   secret: 'Our little secret',
   resave: false,
