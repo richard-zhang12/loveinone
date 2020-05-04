@@ -32,15 +32,23 @@ mongoose.connect(process.env.DB_MONGO, {
   autoIndex: false
 });
 // mongoose.set("useCreateIndex", true);
+
+//Schema
 const userSchema = new mongoose.Schema({
   email: String,
   firstname: String,
   lastname: String
 });
+const messageSchema = new mongoose.Schema({
+  fullname: String,
+  email: String,
+  message: String
+});
 
 userSchema.plugin(passportLocalMongoose, {usernameField: "email"});
-
 const User = mongoose.model("User", userSchema);
+const Message = mongoose.model("Message", messageSchema);
+
 // Make user global object
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
@@ -52,25 +60,39 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
   if (req.isAuthenticated()) {
-    res.render("home", {loginDisplay: "d-none", logoutDisplay: "d-block"});
+    res.render("home", {loginDisplay: "logout"});
   } else {
-    res.render("home", {loginDisplay: "d-block", logoutDisplay: "d-none"});
+    res.render("home", {loginDisplay: "login"});
   }
 });
 
-app.get("/contact", function(req, res) {
+app.route("/contact")
+.get(function(req, res) {
   if (req.isAuthenticated()) {
-    res.render("contact", {loginDisplay: "d-none", logoutDisplay: "d-block"});
+    res.render("contact", {loginDisplay: "logout"});
   } else {
-    res.redirect("/login");
+    res.render("contact", {loginDisplay: "login"});
   }
+})
+.post(function(req, res) {
+  const newMessage = new Message({
+    fullname: req.body.fullname,
+    email: req.body.email,
+    message: req.body.message
+  });
+  newMessage.save(function(err){
+    if(!err) {
+      res.render('message', {message: newMessage});
+    }
+  });
+
 });
 
 app.get("/dating", function(req, res) {
   if (req.isAuthenticated()) {
-    res.render("dating", {loginDisplay: "d-none", logoutDisplay: "d-block"});
+    res.render("dating", {loginDisplay: "logout"});
   } else {
-    res.redirect("/login");
+    res.render("dating", {loginDisplay: "login"});
   }
 });
 
@@ -81,30 +103,13 @@ app.get("/logout", function(req, res) {
 
 app.route("/login")
 .get(function(req, res) {
-  res.render("login", {message: req.flash("error")});
+  res.render("login", {loginDisplay: "login", message: req.flash("error")});
 })
 .post(passport.authenticate("local", {
   successRedirect: "/dating",
   failureRedirect: "/login",
   failureFlash: true,
 }));
-
-  // const user = new User({
-  //   username: req.body.username,
-  //   password: req.body.password
-  // });
-  // req.login(user, function(err){    
-    
-  //   if (err) {
-  //     res.render("signin", {message: "Incorrect login, please try again."});
-  //   } else {  
-  //     passport.authenticate("local")(req, res, function() {
-        
-  //       res.redirect("/myDate");
-  //     });
-  //   }
-  // });
-// });
 
 app.route("/signup")
 .get(function(req, res) {
