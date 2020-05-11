@@ -24,8 +24,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+let connection;
+if (process.env.NODE_ENV === 'production') {
+  connection = process.env.DB_MONGO;
+} else {
+  connection = "mongodb://localhost:27017/userDB";
+}
 // mongoose.connect('mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test?retryWrites=true&w=majority', {
-mongoose.connect(process.env.DB_MONGO, {
+mongoose.connect(connection, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useFindAndModify: false,
@@ -37,7 +43,17 @@ mongoose.connect(process.env.DB_MONGO, {
 const userSchema = new mongoose.Schema({
   email: String,
   firstname: String,
-  lastname: String
+  lastname: String,
+  gender: String,
+  birthday: Date,
+  image: String,
+  zipcode: String,
+  city: String,
+  country: String,
+  wallet: {
+    type: Number,
+    default: 0
+  }
 });
 const messageSchema = new mongoose.Schema({
   fullname: String,
@@ -59,20 +75,23 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
-  if (req.isAuthenticated()) {
-    res.render("home", {loginDisplay: "logout"});
-  } else {
-    res.render("home", {loginDisplay: "login"});
-  }
+  res.render("home");
+  console.log(connection);
+  // if (req.isAuthenticated()) {
+  //   res.render("home", {loginDisplay: "logout"});
+  // } else {
+  //   res.render("home", {loginDisplay: "login"});
+  // }
 });
 
 app.route("/contact")
 .get(function(req, res) {
-  if (req.isAuthenticated()) {
-    res.render("contact", {loginDisplay: "logout"});
-  } else {
-    res.render("contact", {loginDisplay: "login"});
-  }
+  res.render("contact");
+  // if (req.isAuthenticated()) {
+  //   res.render("contact", {loginDisplay: "logout"});
+  // } else {
+  //   res.render("contact", {loginDisplay: "login"});
+  // }
 })
 .post(function(req, res) {
   const newMessage = new Message({
@@ -89,11 +108,12 @@ app.route("/contact")
 });
 
 app.get("/dating", function(req, res) {
-  if (req.isAuthenticated()) {
-    res.render("dating", {loginDisplay: "logout"});
-  } else {
-    res.render("dating", {loginDisplay: "login"});
-  }
+  res.render("dating");
+  // if (req.isAuthenticated()) {
+  //   res.render("dating", {loginDisplay: "logout"});
+  // } else {
+  //   res.render("dating", {loginDisplay: "login"});
+  // }
 });
 
 app.get("/logout", function(req, res) {
@@ -103,7 +123,7 @@ app.get("/logout", function(req, res) {
 
 app.route("/login")
 .get(function(req, res) {
-  res.render("login", {loginDisplay: "login", message: req.flash("error")});
+  res.render("login", {message: req.flash("error")});
 })
 .post(passport.authenticate("local", {
   successRedirect: "/dating",
@@ -116,14 +136,15 @@ app.route("/signup")
   res.render("signup", {message: ""});
 })
 .post(function(req, res) {
-  const {firstname, lastname, email, password} = req.body
+  
+  const {firstname, lastname, gender, birthday, email, password} = req.body;
   User.findOne({email}, function(err,user){
     if (user) {
       res.render("signup", {message: "The username already exist, please try again!"});
     }
   });
   
-  User.register({email, firstname, lastname}, password, function(err, user) {
+  User.register({email, firstname, lastname, gender, birthday}, password, function(err, user) {
     if (err) {
       console.log(err);
       res.redirect("/signup");

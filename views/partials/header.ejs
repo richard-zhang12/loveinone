@@ -28,8 +28,15 @@
         <a class="nav-link" href="/contact">Contact</a>
       </li>
     </ul>
-    <a href="/<%= loginDisplay %>"> 
-      <button type="button" class="btn btn-outline-dark btn-block"><%= loginDisplay %></button> 
+
+    <% if (user) { %>
+      <a href="/logout"> 
+        <button type="button" class="btn btn-outline-dark btn-block">logout</button> 
+      </a>
+   <% } else { %>
+    <a href="/login"> 
+      <button type="button" class="btn btn-outline-dark btn-block">login</button> 
     </a>
+    <% } %>
   </div> 
 </nav>

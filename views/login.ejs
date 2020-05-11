@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header1') %>
 
 <div class="container mt-5">
     <div class="row">
@@ -12,12 +12,12 @@
           
           <input type="email" name="email" class="form-control mt-5" placeholder="Email" required>
           <input type="password" name="password" class="form-control mt-4 mb-4" placeholder="Password" required>
-          <a href="/forgotPassword">Forgot your password?</a>
           <p class="text-danger"><%= message %></p>
           <div class="mt-4">
           <button class="btn btn-primary btn-block" type="submit">Log In</button>
           </div>
-          
+          <a href="/forgotPassword">Forgot your password?</a>
+
           <a href="/signup"> 
             <button type="button" class="btn btn-outline-dark btn-block mt-5">Sign Up</button> 
           </a>
