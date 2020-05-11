@@ -28,9 +28,8 @@ let connection;
 if (process.env.NODE_ENV === 'production') {
   connection = process.env.DB_MONGO;
 } else {
-  connection = "mongodb://localhost:27017/userDB";
+  connection = process.env.DB_LOCAL;
 }
-// mongoose.connect('mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test?retryWrites=true&w=majority', {
 mongoose.connect(connection, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -76,7 +75,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
   res.render("home");
-  console.log(connection);
   // if (req.isAuthenticated()) {
   //   res.render("home", {loginDisplay: "logout"});
   // } else {
