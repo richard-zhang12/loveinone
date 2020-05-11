@@ -26,7 +26,7 @@ app.use(passport.session());
 
 let connection;
 if (process.env.NODE_ENV === 'production') {
-  connection = process.env.DB_MONGO;
+  connection = process.env.DB_MONGO1;
 } else {
   connection = "mongodb://localhost:27017/userDB";
 }
