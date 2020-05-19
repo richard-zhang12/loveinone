@@ -42,7 +42,7 @@ mongoose.connect(connection, {
   useNewUrlParser: true,
   useFindAndModify: false,
   autoIndex: false
-});
+}).catch(error => handldError(error));
 // mongoose.set("useCreateIndex", true);
 
 //Schema
