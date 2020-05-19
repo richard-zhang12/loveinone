@@ -7,7 +7,13 @@ const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const flash = require("connect-flash");
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/' })
+const path = require('path');
+var formidable = require('formidable');
 const app = express();
+
+
 app.use(flash());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -30,6 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   connection = process.env.DB_LOCAL;
 }
+// mongodb://localhost:27017/userDB
 mongoose.connect(connection, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -45,7 +52,10 @@ const userSchema = new mongoose.Schema({
   lastname: String,
   gender: String,
   birthday: Date,
-  image: String,
+  image: {
+    type: String,
+    default: '/img/user.png'
+},
   zipcode: String,
   city: String,
   country: String,
@@ -113,6 +123,53 @@ app.get("/dating", function(req, res) {
   //   res.render("dating", {loginDisplay: "login"});
   // }
 });
+
+app.get('/uploadImage', (req, res) => {
+  res.render('uploadImage');
+});
+
+app.post('/uploadAvator', (req, res) => {
+  var form = new formidable.IncomingForm();
+  form.parse(req);
+  form.on('fileBegin', function(name, file) {
+    file.path = __dirname +'/public/img/' + file.name;
+  });
+
+  form.on('file', function (name, file){
+    User.findById({_id: req.user._id}, (err,user) => {
+      if (err) {
+        console.err(err);
+      } else {
+      user.image = '/img/' + file.name;    
+      user.save((err) => {
+        if (err) {
+          throw err;
+        } else {
+          res.redirect('/dating');
+        }
+      });
+      }
+    });
+  });
+  
+  });
+
+  // return res.json(200, {
+  //         result: 'Upload Success'
+  // });
+ 
+  
+app.post('/upload', (req, res) => {
+  const form = formidable({ multiples: true });
+ 
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+})
 
 app.get("/logout", function(req, res) {
   req.logout();
