@@ -11,8 +11,13 @@ const flash = require("connect-flash");
 // const upload = multer({ dest: 'uploads/' })
 const path = require('path');
 var formidable = require('formidable');
+const fs = require('fs');
+const AWS = require('aws-sdk');
 const app = express();
-
+const s3 = new AWS.S3({
+  accessKeyId: 'AKIAYSAXYZGENFNDDKPE',
+  secretAccessKey: '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'
+});
 
 app.use(flash());
 app.use(express.static("public"));
@@ -51,7 +56,7 @@ const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   gender: String,
-  birthday: Date,
+  birthyear: Number,
   image: {
     type: String,
     default: '/img/user.png'
@@ -84,22 +89,16 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get("/", function(req, res) {
-  res.render("home");
-  // if (req.isAuthenticated()) {
-  //   res.render("home", {loginDisplay: "logout"});
-  // } else {
-  //   res.render("home", {loginDisplay: "login"});
-  // }
+  if (req.isAuthenticated()) {
+    res.render("home");
+  } else {
+    res.render("login", {message: ""});
+  }
 });
 
-app.route("/contact")
+app.route("/contactus")
 .get(function(req, res) {
-  res.render("contact");
-  // if (req.isAuthenticated()) {
-  //   res.render("contact", {loginDisplay: "logout"});
-  // } else {
-  //   res.render("contact", {loginDisplay: "login"});
-  // }
+  res.render("contactus");
 })
 .post(function(req, res) {
   const newMessage = new Message({
@@ -115,8 +114,22 @@ app.route("/contact")
 
 });
 
-app.get("/dating", function(req, res) {
-  res.render("dating");
+app.get("/myinfo", function(req, res) {
+  console.log(req.user);
+  const getParams = {
+    Bucket: 'online-dating-app2',
+    Key: req.user.image
+  }
+
+  s3.getObject(getParams, function (err, data) {
+    if (err) {
+        console.log(err);
+    } else {
+        res.send({data}); 
+    }
+  });
+  
+  res.render("myinfo");
   // if (req.isAuthenticated()) {
   //   res.render("dating", {loginDisplay: "logout"});
   // } else {
@@ -124,52 +137,49 @@ app.get("/dating", function(req, res) {
   // }
 });
 
-app.get('/uploadImage', (req, res) => {
-  res.render('uploadImage');
-});
-
 app.post('/uploadAvator', (req, res) => {
   var form = new formidable.IncomingForm();
+  
   form.parse(req);
   form.on('fileBegin', function(name, file) {
     file.path = __dirname +'/public/img/' + file.name;
   });
 
   form.on('file', function (name, file){
+    console.log(file.name);
+    const fileName = file.name;
+    const filecontent = fs.readFileSync(fileName);
+    fs.readFile(fileName, (err, data) => {
+      if (err) throw err;
+      const params = {
+          Bucket: 'online-dating-app2', // pass your bucket name
+          Key: fileName, 
+          Body: filecontent
+      };
+      s3.upload(params, function(s3Err, data) {
+          if (s3Err) throw s3Err
+          console.log(`File uploaded successfully at ${data.Location}`)
+      });
+   });
+
     User.findById({_id: req.user._id}, (err,user) => {
       if (err) {
         console.err(err);
       } else {
-      user.image = '/img/' + file.name;    
+      user.image = file.name;    
       user.save((err) => {
         if (err) {
           throw err;
         } else {
-          res.redirect('/dating');
+          res.redirect('/myinfo');
         }
       });
       }
     });
   });
-  
+
   });
 
-  // return res.json(200, {
-  //         result: 'Upload Success'
-  // });
- 
-  
-app.post('/upload', (req, res) => {
-  const form = formidable({ multiples: true });
- 
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      next(err);
-      return;
-    }
-    res.json({ fields, files });
-  });
-})
 
 app.get("/logout", function(req, res) {
   req.logout();
@@ -181,7 +191,7 @@ app.route("/login")
   res.render("login", {message: req.flash("error")});
 })
 .post(passport.authenticate("local", {
-  successRedirect: "/dating",
+  successRedirect: "/",
   failureRedirect: "/login",
   failureFlash: true,
 }));
@@ -192,20 +202,20 @@ app.route("/signup")
 })
 .post(function(req, res) {
   
-  const {firstname, lastname, gender, birthday, email, password} = req.body;
+  const {firstname, lastname, gender, birthyear, email, password} = req.body;
   User.findOne({email}, function(err,user){
     if (user) {
       res.render("signup", {message: "The username already exist, please try again!"});
     }
   });
   
-  User.register({email, firstname, lastname, gender, birthday}, password, function(err, user) {
+  User.register({email, firstname, lastname, gender, birthyear}, password, function(err, user) {
     if (err) {
       console.log(err);
       res.redirect("/signup");
     } else {
       passport.authenticate("local")(req, res, function() {
-        res.redirect("/dating");
+        res.redirect("/");
       })
     }
   });
