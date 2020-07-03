@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+
+<div class="container mt-3 text-center">
+    <% if (chats) { %>
+    <% chats.forEach(function(chat){ %>
+    <div class="row">
+        <div class="col-sm-6 text-left">
+            <div class="media mt-4">
+                <img src="<%= chat.chatmate.image %>" class="roundedImg mr-4">
+                <% if (chat.gotNewMsg) { %>
+                <i class="fa fa-circle text-danger"></i>
+                <% } %>
+                <div>
+                    <a href="/chat/<%= chat.chatmate._id %>/<%= chat.chatmate.firstname %>">
+                    <p><%=chat.chatmate.firstname%> <%=chat.chatmate.lastname%></p>
+                        <!-- <p class="text-left">
+                            <%= iif(chat.messages[chat.messages.length-1].sender._id.toString() === chat.chatmate._id.toString(), chat.chatmate.firstname+':  ', 'Me:')%>
+                            <%= chat.messages[chat.messages.length-1].message%>
+                        </p> -->
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <% }); %>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

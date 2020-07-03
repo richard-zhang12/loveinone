@@ -4,50 +4,61 @@
 <head>
   <meta charset="utf-8">
   <title>💑LoveInOne</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body class="text-center">
 
   <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" >
-  <a class="navbar-brand" href="/">💑LoveInOne</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/">💑LoveInOne</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <% if (user) { %>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item ml-5 active">
-            <a class="nav-link" href="/chats">Chats</a>
-          </li>     
-          <li class="nav-item ml-5 active">
-            <a class="nav-link" href="/contacts">Contacts</a>
-          </li>
-          <li class="nav-item ml-5 active">
-            <a class="nav-link" href="/discover">Discover</a>
-          </li>
-          <li class="nav-item ml-5 dropdown active">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Me
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/myinfo">My Info</a>
-              <a class="dropdown-item" href="/profile">profile</a>
-              <a class="dropdown-item" href="/contactus">Contact Us</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/logout">Logout</a>
-            </div>
-          </li>
-        </ul>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item ml-5 active">
+          <a class="nav-link" href=" /chats">
+            <% if (gotNewMsg) { %>
+            <i class="fa fa-circle text-danger"></i>
+            <% } %>
+            Chats
+          </a>
+        </li>
+        <li class="nav-item ml-5 active">
+          <a class="nav-link" href="/contacts">Contacts</a>
+        </li>
+        <li class="nav-item ml-5 active">
+          <a class="nav-link" href="/discover">Discover</a>
+        </li>
+        <li class="nav-item ml-5 dropdown active">
+
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <%= user.firstname%>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/myaccount">My Account</a>
+            <a class="dropdown-item" href="/profile">profile</a>
+            <a class="dropdown-item" href="/contactus">Contact Us</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </li>
+      </ul>
       <!-- <a href="/logout"> 
         <button type="button" class="btn btn-outline-dark btn-block">logout</button> 
       </a> -->
-   <% } else { %>
-    <!-- <a href="/login"> 
+      <% } else { %>
+      <!-- <a href="/login"> 
       <button type="button" class="btn btn-outline-dark btn-block">login</button> 
     </a> -->
-    <% } %>
-  </div> 
-</nav>
+      <% } %>
+    </div>
+  </nav>

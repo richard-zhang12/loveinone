@@ -1,0 +1,42 @@
+<%- include('partials/header1') %>
+
+<div class="container mt-5 text-center">
+    <h2 class="mb-5">Love is waiting, subscribe now</h2>
+    <div class="row">
+        <div class="col-sm border rounded ml-5 mr-5">
+            <h4 class="mt-4">1 Month</h4>
+            <p>One month for $15</p>
+    
+            <form class="mb-4" action="/chargeOneMonth" method="POST">
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%=StripePublishableKey%>" data-amount="1500" data-name="Love-In-One"
+                    data-description="$15 for one month" data-image="/img/love.jpg" data-locale="auto">
+                    </script>
+            </form>
+        </div>
+    
+        <div class="col-sm border rounded ml-5 mr-5">
+            <h4 class="mt-4">3 Months</h4>
+            <p>Three months for $30</p>
+            <form class="mb-4" action="/chargeThreeMonths" method="POST">
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%=StripePublishableKey%>" data-amount="3000" data-name="Love-In-One"
+                    data-description="$30 for three months" data-image="/img/love.jpg" data-locale="auto">
+                    </script>
+            </form>
+        </div>
+    
+        <div class="col-sm border rounded ml-5 mr-5">
+            <h4 class="mt-4">6 Months</h4>
+            <p>Six months for $50</p>
+            <form class="mb-4" action="/chargeSixMonths" method="POST">
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="<%=StripePublishableKey%>" data-amount="5000" data-name="Love-In-One"
+                    data-description="$50 for six months" data-image="/img/love.jpg" data-locale="auto">
+                    </script>
+            </form>
+        </div> 
+    
+    </div>
+</div>
+
