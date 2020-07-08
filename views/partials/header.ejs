@@ -15,7 +15,7 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="/">💑LoveInOne</a>
+    <a class="navbar-brand" href="/"><img src="/img/love.jpg" width="30" height="30">LoveInOne</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -23,6 +23,9 @@
     <% if (user) { %>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+        <li class="nav-item ml-5 active">
+          <a class="nav-link" href="/discover">Discover</a>
+        </li>
         <li class="nav-item ml-5 active">
           <a class="nav-link" href=" /chats">
             <% if (gotNewMsg) { %>
@@ -34,9 +37,6 @@
         <li class="nav-item ml-5 active">
           <a class="nav-link" href="/contacts">Contacts</a>
         </li>
-        <li class="nav-item ml-5 active">
-          <a class="nav-link" href="/discover">Discover</a>
-        </li>
         <li class="nav-item ml-5 dropdown active">
 
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -45,9 +45,10 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/myaccount">My Account</a>
-            <a class="dropdown-item" href="/profile">profile</a>
-            <a class="dropdown-item" href="/contactus">Contact Us</a>
+            <a class="dropdown-item" href="/profile">Profile</a>
+            <a class="dropdown-item" href="/posting">Posting</a>
             <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/contactus">Contact Us</a>
             <a class="dropdown-item" href="/logout">Logout</a>
           </div>
         </li>

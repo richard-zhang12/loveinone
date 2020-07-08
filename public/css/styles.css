@@ -10,6 +10,12 @@ body {
     background-color: ivory;
 }
 
+.iForm {
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
 .roundedImg {
     width: 100px;
     height: 100px;

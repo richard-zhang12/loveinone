@@ -353,6 +353,12 @@ app.get("/myaccount", requireLogin, function (req, res) {
 
 });
 
+app.route("/posting")
+  .get(function (req, res) {
+    res.render("posting", { message: "" });
+  })
+
+
 app.route("/signup")
   .get(function (req, res) {
     res.render("signup", { message: "" });
