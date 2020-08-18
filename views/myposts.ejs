@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+
+<div class="container mt-3 iForm">
+    <h4><a href="#" id="newPost" onclick="displayForm()" style="display:block"><i class="far fa-plus-square">New
+                Post</i></a></h4>
+    <div class="container iForm">
+        <form method="POST" action="/postCreate" style="display:none" enctype="multipart/form-data" id="uploadForm"
+            onchange="formChange()">
+            <h3 class="text-center mt-3"> New Post </h3>
+            <div class="mx-auto" style="width: 100%;">
+                <img class="card-img-top" id="uploadpic">
+            </div>
+            <input type="file" name="avatar" onchange="showpic(this);" required>
+            <br>
+            <br>
+            <textarea rows="5" name="postBody" class="form-control" placeholder="Say something.." required></textarea>
+
+            <button class="btn btn-primary btn-block mt-4" id="button" onclick="hideForm()" type="submit">Post</button>
+        </form>
+    </div>
+    <hr>
+
+    <% posts.forEach((post) => { %>
+    <div class="card mx-0 text-left">
+        <p class="mb-0 text-black-50">
+            <img src="<%=post.postUser.image%>" class="rounded-circle mr-2" width="40px" height="40px">
+            <%=post.postUser.username%> - <%= getLastMoment(post.date, 'hour') %>
+        </p>
+        <p class="ml-2"><%=post.postBody%></p>
+        <img src="<%=post.image%>" class="img-fluid">
+        <a href="/postComment/<%=post._id%>"><i class="fa fa-comment ml-3 mt-3">Comment</i></a>
+        <br>
+    </div>
+    <hr>
+    <% }); %>
+</div>
+
+<script>
+    function showpic(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#uploadpic')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function displayForm() {
+        document.getElementById('newPost').style.display = 'none';
+        document.getElementById('uploadForm').style.display = 'block';
+    }
+
+    function hideForm() {
+        document.getElementById('newPost').style.display = 'block';
+        document.getElementById('uploadForm').style.display = 'none';
+    }
+
+</script>
+
+
+<%- include('partials/footer') %>

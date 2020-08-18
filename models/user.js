@@ -1,10 +1,15 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
+const { isDate } = require('moment');
 const Schema = mongoose.Schema;
 
 //Schema
 const userSchema = new mongoose.Schema({
-  birthyear: Number,
+  aboutMe: String,
+  aboutYou: String,
+  aboutUs: String,
+  age: String,
+  bodytype: String,
   children: String,
   city: String,
   country: String,
@@ -19,30 +24,35 @@ const userSchema = new mongoose.Schema({
   education: String,
   email: String,
   ethnicity: String,
-  firstname: String,
-  fullName: String,
+  follows: [{
+    _id: {
+      type: Schema.Types.ObjectId
+    }
+  }],
   gender: String,
+  gotNewMsg: {
+    type: Boolean,
+    default: false
+  },
   height: String,
   image: {
     type: String,
     default: '/img/user.png'
   },
-  lastname: String,
-  nickname: String,
+  maritalStatus: String,
+  profession: String,
   religion: String,
-  smoke: String,
-  gotNewMsg: {
-    type: Boolean,
-    default: false
-  },
+  state: String,
   status: {
     type: String,
-    default: 'active'
+    default: 'Active'
   },
+  username: String,
   wallet: {
     type: Number,
     default: 0
   },
+  zipcode: String
 });
 
 userSchema.plugin(passportLocalMongoose, { usernameField: "email" });

@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+
+<div class="container mt-3 iForm text-left">
+    <%if (posts) {%>
+    <% posts.forEach((post) => { %>
+    <div class="card mx-0">
+        <p class="mb-0 text-black-50">
+            <img src="<%=post.postUser.image%>" class="rounded-circle mr-2" width="40px" height="40px">
+            <%=post.postUser.username%> <%= getLastMoment(post.date, 'hour') %>
+        </p>
+        <p class="ml-2"><%=post.postBody%></p>
+        <img src="<%=post.image%>" class="img-fluid">
+        <a href="/postComment/<%=post._id%>"><i class="fa fa-comment ml-3 mt-3">Comment</i></a>
+        <br>
+    </div>
+    <hr>
+    <% }); %>
+    <%} else %>
+    <p>No posts found ..</p>
+    </%>
+</div>
+
+<!-- <script>
+
+    $('button').click(function () {
+        event.preventDefault();
+        const index = $('this').val();
+        // alert(index);
+        const comment = $('#commentBody2').val();
+        // alert($('span').val());
+        const id = $('this').attr('data-id');
+        // alert(id);
+        const formData = {
+            id: $(this).attr('data-id'),
+            comment: "haha"
+        }
+        $.ajax({
+            type: "POST",
+            url: "/postComment/" + id,
+            data: formData,
+            success: function (res) {
+                // $("#newComment").html("<p>" + id +  "</p>");
+                console.log('id from ajax call is', res);
+                window.location.reload();
+            },
+            error: function (e) {
+                console.log("ERROR: ", e);
+            }
+        });
+    });
+
+</script> -->
+
+<%- include('partials/footer') %>

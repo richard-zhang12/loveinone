@@ -8,7 +8,7 @@
 
         <div class="col-sm-8">
             <h5 class="text-center"><%=receiverName%></h5>
-            <div id="chatroom">
+            <div id="panel">
                 <% if (chat) { %>
                 <% const myuser = user._id %>
                 <% chat.messages.forEach(function(oneMessage){ %>
@@ -18,9 +18,8 @@
                         <img src="<%=oneMessage.sender.image%>" class="mr-3 rounded-circle" width="64" height="64">
                     </a>
                     <div class="media-body">
-                        <small class="mt-0" style="color:grey"><%=oneMessage.sender.firstname%>
-                            <%=oneMessage.sender.lastname%> -
-                            <%=oneMessage.date.toLocaleString("en-US", {month:'short',day:'numeric'})%></small>
+                        <small class="mt-0" style="color:grey"><%=oneMessage.sender.username%>
+                            - <%=oneMessage.date.toLocaleString("en-US", {month:'short',day:'numeric'})%></small>
                         <p><%=oneMessage.message%></p>
                     </div>
                 </div>
@@ -48,7 +47,7 @@
 </div>
 
 <script>
-    $('#chatroom').animate({ scrollTop: 1000000 }, 1200);
+    $('#panel').animate({ scrollTop: 1000000 }, 1200);
 
 </script>
 

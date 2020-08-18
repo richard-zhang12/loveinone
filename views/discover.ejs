@@ -1,21 +1,21 @@
 <%- include('partials/header') %>
 
 <div class="container mt-3 text-center">
-    <% users.forEach(function(user){ %>
-    <a href="/userProfile/<%= user._id %>">
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="media">
-                    <img src="<%= user.image %>" class="roundedImg">
-                    <div class="media-body">
-                        <p><%=user.firstname%> <%=user.lastname%></p>
-                    </div>
+    <div class="row">
+        <% users.forEach(function(user){ %>
+        <div class="col-sm-3">
+            <div class="card mr-4" style="width: 16rem;">
+                <img src="<%= user.image %>" class="card-img-top image">
+                <div class="card-body">
+                    <p><%=user.username%></p>
+                    <a href="/userProfile/<%= user._id %>" class="btn btn-outline-dark btn-sm mr-3">Profile</a>
+                    <a href="/posts/<%= user._id %>" class="btn btn-outline-dark btn-sm mr-3">Posts</a>
+                    <a href="/chat/<%= user._id %>/<%= user.username%>" class="btn btn-outline-dark btn-sm mr-3">Chat</a>
                 </div>
             </div>
         </div>
-    </a>
-    <hr>
-    <% }); %>
+        <% }); %>
+    </div>
 </div>
 
 <%- include('partials/footer') %>

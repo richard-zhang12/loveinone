@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+
+<div class="container mt-3 pl-2 iForm">   
+    <div class="card">
+        <h2>Comments</h2>
+        <div class="card-body">            
+            <p class="text-left">
+                <span>
+                    <a href="/userProfile/<%=post.postUser._id%>">
+                        <img src="<%=post.postUser.image%>" class="mr-3" width="64px">
+                    </a>            
+                </span> <%=post.postBody%></p>
+            <img src="<%=post.image%>" class="img-fluid">
+            <br>
+            <small><%= getLastMoment(post.date, 'hour') %></small>
+        </div>
+    </div>
+
+    <div class="text-left pl-2" id="panel">
+        <% post.comments.forEach(function(comment){ %>
+        <p><span class="text-info">
+                <a class="mr-3" href="/userProfile/<%=comment.commentUser._id%>">
+                    <%= comment.commentUser.firstname %>:
+                </a>
+            </span> <%= comment.commentBody %>
+        </p>
+        <% }); %>
+        <br>
+        <form action="/postComment/<%=post._id%>" method="POST" class="form-inline">
+            <div class="form-group">
+                <input type="text" name="commentBody" style="width:250px;" class="form-control"
+                    placeholder="Add comment..." required>
+                <button class="btn btn-primary px-1 py-1" type="submit" style='font-size:16px'><i
+                        class="fas fa-arrow-alt-circle-up" style='font-size:28px'></i></button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    $('#panel').animate({ scrollTop: 1000000 }, 1200);
+    $("input").focus();
+
+</script>
+
+
+<%- include('partials/footer') %>

@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+<div class="container mt-5 text-center">
+    <div class="row">
+        <div class="col-sm">
+
+        </div>
+
+        <div class="col-sm">
+
+            <h3 class="text-center mt-3"> My Post </h3>
+            <div class="ml-5" style="width: 10rem;">
+                <img class="card-img-top" id="uploadpic" >
+            </div>
+            <form method="POST" action="/postCreate" enctype="multipart/form-data" id="uploadForm" onchange="formChange()">
+                <input type="file" name="avatar" onchange="showpic(this);" required>
+                <br>
+                <br>
+                <textarea rows="5" name="postBody" class="form-control" placeholder="Say something.."
+                    required></textarea>
+
+                <button class="btn btn-primary btn-block mt-4" id="button" type="submit">Post</button>
+            </form>
+
+        </div>
+
+        <div class="col-sm">
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function showpic(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#uploadpic')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>
+
+<%- include('partials/footer') %>

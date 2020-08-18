@@ -6,17 +6,18 @@
     <div class="row">
         <div class="col-sm-6 text-left">
             <div class="media mt-4">
-                <img src="<%= chat.chatmate.image %>" class="roundedImg mr-4">
+                <img src="<%= chat.chatmate.image %>" id="chatImg" class="rounded mr-4"
+                    style="height: 72px; width: 72px;">
                 <% if (chat.gotNewMsg) { %>
                 <i class="fa fa-circle text-danger"></i>
                 <% } %>
-                <div>
-                    <a href="/chat/<%= chat.chatmate._id %>/<%= chat.chatmate.firstname %>">
-                    <p><%=chat.chatmate.firstname%> <%=chat.chatmate.lastname%></p>
-                        <!-- <p class="text-left">
-                            <%= iif(chat.messages[chat.messages.length-1].sender._id.toString() === chat.chatmate._id.toString(), chat.chatmate.firstname+':  ', 'Me:')%>
+                <div style="margin-left: 120px;">
+                        <p><%=chat.chatmate.username%> </p>
+                        <a href="/chat/<%= chat.chatmate._id %>/<%= chat.chatmate.username %>">
+                        <p class="text-left">
+                            <%= iif(chat.messages[chat.messages.length-1].sender._id.toString() === chat.chatmate._id.toString(), chat.chatmate.username+':  ', 'Me:')%>
                             <%= chat.messages[chat.messages.length-1].message%>
-                        </p> -->
+                        </p>
                     </a>
                 </div>
             </div>

@@ -2,13 +2,14 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>💑LoveInOne</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://kit.fontawesome.com/841a6d2d93.js" crossorigin="anonymous"></script>
+  <!-- <script src="/js/getrequest.js"></script> -->
 </head>
 
 <body class="text-center">
@@ -34,19 +35,31 @@
             Chats
           </a>
         </li>
-        <li class="nav-item ml-5 active">
-          <a class="nav-link" href="/contacts">Contacts</a>
-        </li>
-        <li class="nav-item ml-5 dropdown active">
-
+        <!-- <li class="nav-item ml-5 active">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li> -->
+        <!-- <li class="nav-item ml-5 dropdown active">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            <%= user.firstname%>
+            Posting
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/posts">View Posts</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/#">Friends</a>
+          </div>
+        </li> -->
+
+        <li class="nav-item ml-5 dropdown active">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+           Me
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/myaccount">My Account</a>
-            <a class="dropdown-item" href="/profile">Profile</a>
-            <a class="dropdown-item" href="/posting">Posting</a>
+            <a class="dropdown-item" href="/myprofile">My Profile</a>
+            <a class="dropdown-item" href="/myposts">My Posts</a>
+
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/contactus">Contact Us</a>
             <a class="dropdown-item" href="/logout">Logout</a>
