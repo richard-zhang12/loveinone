@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+
+<div class="container mt-3 text-center">
+    <div class="row">
+        <% users.forEach(function(user){ %>
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="<%= user.image %>" class="card-img-top image img-fluid">
+                <div class="card-body">
+                    <a href="/userPage/<%= user._id %>">
+                        <p><%=user.username%></p>
+                    </a>
+                    <small><%= new Date().getFullYear()-user.yearBorn%> - <%=user.city%>, <%=user.state%>
+                        <%=user.country%> </small>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

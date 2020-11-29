@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header1') %>
 
 <div class="container-fluid mt-3 text-left">
 
@@ -7,35 +7,33 @@
         </div>
 
         <div class="col-sm-8">
-            <h5 class="text-center"><%=receiverName%></h5>
-            <div id="panel">
-                <% if (chat) { %>
+            <h5 class="text-center"><%=chat.name%></h5>
+            <div id="panel" style="height: 500px;">
+                <% if (chat.messages) { %>
                 <% const myuser = user._id %>
-                <% chat.messages.forEach(function(oneMessage){ %>
-                <div class="media mt-2"
-                    style="background-color:<%- iif(oneMessage.sender._id.toString() === myuser.toString(),'LightGreen','Azure')%>">
-                    <a href="/userProfile/<%= chat.sender %>}">
-                        <img src="<%=oneMessage.sender.image%>" class="mr-3 rounded-circle" width="64" height="64">
+                <% chat.messages.forEach(function(message){ %>
+                <div class="media p-0"
+                    style="background-color:<%= iif(message.sender._id.toString() == myuser.toString(),'LightGreen','LightGrey')%>">
+                    <a href="/userProfile/<%= message.sender._id %>">
+                        <img src="<%=message.sender.image%>" class="mr-3 rounded-circle img-fluid"
+                            style="width:50px;height:50px;">
                     </a>
                     <div class="media-body">
-                        <small class="mt-0" style="color:grey"><%=oneMessage.sender.username%>
-                            - <%=oneMessage.date.toLocaleString("en-US", {month:'short',day:'numeric'})%></small>
-                        <p><%=oneMessage.message%></p>
+                        <small class="mt-0" style="color:grey"><%=message.sender.username%>
+                            - <%=message.date.toLocaleString("en-US", {month:'short',day:'numeric'})%></small>
+                        <p><%=message.text%></p>
                     </div>
                 </div>
-                <hr>
+                <hr class="my-1">
                 <% }); %>
                 <% } %>
             </div>
-            <% if (chat) { %>
-            <form action="/chat/<%=chat.chatmate._id%>/<%=receiverName%>" method="POST">
-                <% } else {%>
-                <form action="/chat/<%=receiverId%>/<%=receiverName%>" method="POST">
-                    <% } %>
-                    <input type="text" class="form-control" name="message" placeholder="Type message ..">
-                    <br>
-                    <button class="btn btn-primary" type="submit">Send</button>
-                </form>
+            <br>
+            <form action="/chat/<%=chat._id%>/" method="POST">
+                <input type="text" class="form-control" name="text" placeholder="Type message ..">
+                <br>
+                <button class="btn btn-primary" type="submit">Send</button>
+            </form>
         </div>
 
         <div class="col-sm">

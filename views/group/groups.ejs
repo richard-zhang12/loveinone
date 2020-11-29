@@ -1,0 +1,23 @@
+<%- include('../partials/header1') %>
+<div class="container mt-3 text-center">
+    <h3>SMALL GROUPS & INTEREST GROUPS</h3>
+    <div class="row">
+        <% groups.forEach((group) => { %>
+        <div class="col-sm-3">            
+            <div class="card">
+                <h4><%=group.groupName%></h4>
+                <div class="card-body">
+                    <p>Groupleader: <%=group.groupLeader.username%></p>
+                    <p class="text-left"><%=group.groupDetail%></p>
+                    <a href="/groupProfile/<%= group._id %>" class="btn btn-outline-dark btn-sm mr-2">Detail</a>
+                    <a href="/groupBlogs/<%= user._id %>" class="btn btn-outline-dark btn-sm mr-2">Blogs</a>
+                    <a href="/chat/<%= user._id %>/<%= user.username%>"
+                        class="btn btn-outline-dark btn-sm mr-2">Follow</a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

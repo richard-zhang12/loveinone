@@ -9,7 +9,7 @@
 
             <h3 class="text-center mt-3"> My Post </h3>
             <div class="ml-5" style="width: 10rem;">
-                <img class="card-img-top" id="uploadpic" >
+                <img class="card-img-top img-fluid" id="uploadpic" >
             </div>
             <form method="POST" action="/postCreate" enctype="multipart/form-data" id="uploadForm" onchange="formChange()">
                 <input type="file" name="avatar" onchange="showpic(this);" required>

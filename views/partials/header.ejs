@@ -25,30 +25,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item ml-5 active">
-          <a class="nav-link" href="/discover">Discover</a>
+          <a class="nav-link" href="/groups">Groups</a>
         </li>
         <li class="nav-item ml-5 active">
-          <a class="nav-link" href=" /chats">
+          <a class="nav-link" href="/singles">Singles</a>
+        </li>
+        <li class="nav-item ml-5 active">
+          <a class="nav-link" href="/chats">
             <% if (gotNewMsg) { %>
-            <i class="fa fa-circle text-danger"></i>
+            <small><i class="fa fa-circle text-danger"></i></small>
             <% } %>
             Chats
           </a>
         </li>
-        <!-- <li class="nav-item ml-5 active">
-          <a class="nav-link" href="/posts">Posts</a>
-        </li> -->
-        <!-- <li class="nav-item ml-5 dropdown active">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Posting
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/posts">View Posts</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/#">Friends</a>
-          </div>
-        </li> -->
 
         <li class="nav-item ml-5 dropdown active">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -56,12 +45,14 @@
            Me
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/myaccount">My Account</a>
-            <a class="dropdown-item" href="/myprofile">My Profile</a>
-            <a class="dropdown-item" href="/myposts">My Posts</a>
-
+            <a class="dropdown-item" href="/myAccount">My Account</a>
+            <a class="dropdown-item" href="/myProfile">My Profile</a>
+            <a class="dropdown-item" href="/myPosts">My Posts</a>
+            <a class="dropdown-item" href="/myContacts">My Contacts</a>
+            <a class="dropdown-item" href="/myGroup">My Group</a>
+            <a class="dropdown-item" href="/groupNew">Start a new group</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/contactus">Contact Us</a>
+            <a class="dropdown-item" href="/contactUs">Contact Us</a>
             <a class="dropdown-item" href="/logout">Logout</a>
           </div>
         </li>

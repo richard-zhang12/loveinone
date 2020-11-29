@@ -6,12 +6,13 @@ const Schema = mongoose.Schema;
 //Schema
 const userSchema = new mongoose.Schema({
   aboutMe: String,
-  aboutYou: String,
-  aboutUs: String,
-  age: String,
   bodytype: String,
   children: String,
   city: String,
+  contacts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   country: String,
   dateLogin: {
     type: Date,
@@ -25,15 +26,10 @@ const userSchema = new mongoose.Schema({
   email: String,
   ethnicity: String,
   follows: [{
-    _id: {
-      type: Schema.Types.ObjectId
-    }
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
   }],
   gender: String,
-  gotNewMsg: {
-    type: Boolean,
-    default: false
-  },
   height: String,
   image: {
     type: String,
@@ -52,6 +48,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  yearBorn: String,
   zipcode: String
 });
 

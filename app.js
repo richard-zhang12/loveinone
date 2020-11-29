@@ -12,10 +12,13 @@ const AWS = require('aws-sdk');
 const upload = require('./file-upload');
 const singleUpload = upload.single('avatar');
 const ejs = require('ejs');
+const socket = require('socket.io');
+const http = require('http');
 
 //Load models
 const Chat = require('./models/chat');
-const Contact = require('./models/contact');
+const Chatload = require('./models/chatload');
+const Group = require('./models/group');
 const Message = require('./models/message');
 const Post = require('./models/post');
 const User = require('./models/user');
@@ -24,8 +27,11 @@ const Zip = require('./models/zip');
 const app = express();
 
 const Keys = require('./config/keys');
+const { resolve } = require('path');
+const chat = require('./models/chat');
 const stripe = require('stripe')(Keys.StripeSecretkey);
 
+const port = process.env.PORT || 3000;
 app.use(flash());
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
@@ -83,7 +89,7 @@ const requireLogin = (req, res, next) => {
 const checkMembership = (req, res, next) => {
   if (req.user.dateMember < req.user.dateLogin) {
     res.render('payment', {
-      title: 'Payment',
+      chatId: req.params.chatId,
       StripePublishableKey: Keys.StripePublishableKey
     });
   } else {
@@ -92,7 +98,7 @@ const checkMembership = (req, res, next) => {
 }
 
 const checkNewMsg = (req, res, next) => {
-  Chat.findOne({ chatter: req.user._id, gotNewMsg: true }).lean()
+  Chat.findOne({ userId: req.user._id, gotNewMsg: true }).lean()
     .then((newMsg) => {
       if (newMsg) { res.locals.gotNewMsg = true; }
       else { res.locals.gotNewMsg = false; }
@@ -117,7 +123,7 @@ app.get("/", requireLogin, checkNewMsg, function (req, res) {
 
 });
 
-app.post('/chargeOneMonth', requireLogin, (req, res) => {
+app.post('/chargeOneMonth/:chatId', requireLogin, (req, res) => {
   const amount = 1500;
   stripe.customers.create({
     email: req.body.stripeEmail,
@@ -139,6 +145,7 @@ app.post('/chargeOneMonth', requireLogin, (req, res) => {
             user.save()
               .then(() => {
                 res.render('success', {
+                  chatId: req.params.chatId,
                   charge: charge
                 })
               })
@@ -152,136 +159,177 @@ app.post('/chargeOneMonth', requireLogin, (req, res) => {
   });
 });
 
-app.route("/chat/:id/:receiverName")   //id is the receiver's id
-  .get(requireLogin, checkMembership, checkNewMsg, (req, res) => {
-    Chat.findOne({ chatter: req.user._id, chatmate: req.params.id })
-      .sort({ date: 'desc' })
-      // .populate('chatter')
-      // .populate('chatmate')
+app.get("/chatPrivate/:receiverId", requireLogin, (req, res) => {
+  Chat.findOne({ userId: req.user._id, members: [req.params.receiverId] }, (err, chat) => {
+    if (err) throw err;
+    if (chat) {
+      res.redirect(`/chat/${chat._id}`);
+    } else {
+      User.findById(req.params.receiverId, (err, receiver) => {
+        if (err) throw err;
+        const newChat = new Chat({
+          userId: req.user._id,
+          name: receiver.username,
+          image: receiver.image,
+          members: [req.params.receiverId]
+        })
+        newChat.save((err, chat) => {
+          if (err) throw err;
+          chat.groupId = chat._id;
+          chat.save();
+          res.redirect(`/chat/${chat._id}`);
+        });
+      })
+    }
+  })
+});
+
+app.route("/chat/:chatId")
+  .get(requireLogin, checkMembership, (req, res) => {
+    Chat.findById(req.params.chatId)
+      .populate('userId')
       .populate('messages.sender')
-      .then((chat) => {
-        if (chat) {
+      .then(chat => {
+        if (chat.gotNewMsg) {
           chat.gotNewMsg = false;
-          chat.save((err, chat) => {
-            if (err) {
-              throw err;
-            } else {
-              res.render("chatRoom", {
-                receiverName: req.params.receiverName,
-                chat: chat,
-              });
-            }
+          chat.save(() => {
+            res.render('chatRoom', {chat: chat});
           });
         } else {
-          res.render("chatRoom", {
-            receiverName: req.params.receiverName,
-            receiverId: req.params.id,
-            chat: null
-          });
+          res.render('chatRoom', {chat: chat});
         }
-      }).catch((err) => {
-        console.log(err);
-      });
+      })
   })
-  .post(requireLogin, checkNewMsg, (req, res) => {
-    Chat.findOne({ chatter: req.user._id, chatmate: req.params.id }, (err, chat) => {
-      if (err) throw err;
-
-      if (chat) {
-        const newMessage = {
-          sender: req.user._id,
-          message: req.body.message,
-        }
-        chat.messages.push(newMessage);
-        chat.gotNewMsg = false;
-        chat.date = new Date();
-
-        chat.save((err, chat) => {
+  .post(requireLogin, (req, res) => {
+    Chat.findById(req.params.chatId)
+      .then(myChat => {
+        myChat.messages.push({ sender: req.user._id, text: req.body.text });
+        myChat.save((err, chat) => {
           if (err) throw err;
-          Chat.findOne({ chatter: chat.chatmate, chatmate: chat.chatter }, (err, onechat) => {
-            onechat.gotNewMsg = true;
-            onechat.messages.push(newMessage);
-            onechat.save();
-          })
-
-          Chat.findById(chat._id).lean()
-            .sort({ date: 'desc' })
-            .populate('chatmate')
-            .populate('messages.sender')
-            .then(chat => {
-              res.render("chatRoom", {
-                receiverName: req.params.receiverName,
-                chat: chat
-              });
-
-            })
-        });
-      } else {
-        let newChat = {
-          chatter: req.user._id,
-          gotNewMsg: false,
-          chatmate: req.params.id,
-          messages: [{
-            sender: req.user._id,
-            message: req.body.message
-          }]
-        }
-        new Chat(newChat).save((err, chat) => {
-          if (err) throw err;
-          newChat = {
-            chatter: req.params.id,
-            gotNewMsg: true,
-            chatmate: req.user._id,
-            messages: [{
-              sender: req.user._id,
-              message: req.body.message
-            }]
-          }
-          new Chat(newChat).save();
-          Chat.findById(chat._id).lean()
-            .sort({ date: 'desc' })
-            .populate('messages.sender')
-            .then(chat => {
-              if (chat) {
-                res.render("chatRoom", {
-                  receiverName: req.params.receiverName,
-                  chat: chat
-                });
+          if (chat.members.length == 1) {
+            Chat.findOne({ userId: chat.members[0], groupId: chat.groupId }, (err, chatOne) => {
+              if (chatOne) {
+                chatOne.gotNewMsg = true;
+                chatOne.messages.push({ sender: req.user._id, text: req.body.text });
+                chatOne.save();
               }
+              else {
+                const newChat = new Chat({
+                  userId: chat.members[0],
+                  groupId: chat.groupId,
+                  name: req.user.username,
+                  image: req.user.image,
+                  members: [req.user._id],
+                  messages: [{ sender: req.user._id, text: req.body.text }],
+                  gotNewMsg: true
+                });
+                newChat.save();
+              }
+            })
+          } else {
+            chat.members.forEach(memberId => {
+              Chat.findOne({ userId: memberId, groupId: chat.groupId }, (err, chatMult) => {
+                if (chatMult) {
+                  chatMult.gotNewMsg = true;
+                  chatMult.messages.push({ sender: req.user._id, text: req.body.text, gotNewMsg: true });
+                  chatMult.save();
+                }
+                else {
+                  var myArray = chat.members.map(m => { return m.toString(); });
+                  var index = myArray.indexOf(memberId.toString());
+                  myArray.splice(index, 1, req.user._id.toString());
+                  const newChat = new Chat({
+                    userId: memberId,
+                    groupId: chat.groupId,
+                    name: chat.name,
+                    image: chat.image,
+                    members: myArray,
+                    messages: [{ sender: req.user._id, text: req.body.text }],
+                    gotNewMsg: true
+                  });
+                  newChat.save();
+                }
+              })
+            })
+          }
+          Chat.findById(req.params.chatId)
+            .then(chat => {
+              res.redirect(`/chat/${chat._id}`);
             });
         });
-      }
+      })
+  });
+
+app.route("/chatGroup")
+  .get(requireLogin, (req, res) => {
+    User.findById(req.user._id)
+      .populate('contacts')
+      .then(user => {
+        res.render('chatGroup', {
+          user: user
+        })
+      })
+  })
+  .post(requireLogin, (req, res) => {
+    const newChat = new Chat({
+      userId: req.user._id,
+      name: req.body.groupName,
+      members: req.body.members.split(',')
+    });
+    newChat.save((err, chat) => {
+      if (err) throw err;
+      chat.groupId = chat._id;
+      chat.save();
+      res.redirect(`/chat/${chat._id}`);
+    });
+  });
+
+app.get("/chats", requireLogin, function (req, res) {
+  Chat.find({ userId: req.user._id })
+    .populate('messages.sender')
+    .then(chats => {
+      res.render('chats', {
+        chats: chats
+      })
+    })
+})
+
+app.get("/contactDelete/:id", requireLogin, function (req, res) {
+  User.findById(req.user._id, (err, currentUser) => {
+    if (err) throw err;
+    currentUser.contacts.splice(currentUser.contacts.indexOf(req.params.id), 1);
+    currentUser.save();
+    User.findById(req.params.id, (err, user) => {
+      if (err) throw err;
+      res.render("userPage", {
+        user: user,
+        message: "User is removed from the contacts",
+        iscontact: false
+      });
+    });
+  });
+});
+
+app.get("/contactAdd/:id", requireLogin, function (req, res) {
+  User.findById(req.user._id, (err, currentUser) => {
+    if (err) throw err;
+    currentUser.contacts.push(req.params.id);
+    currentUser.save();
+    User.findById(req.params.id, (err, user) => {
+      if (err) throw err;
+      res.render("userPage", {
+        user: user,
+        message: "User is added to the contacts",
+        iscontact: true
+      });
     });
 
   });
-
-app.get("/chats", requireLogin, checkNewMsg, function (req, res) {
-  Chat.find({ chatter: req.user._id }).lean()
-    .sort({ date: 'desc' })
-    // .populate('chatter')
-    .populate('chatmate')
-    // .populate('messages.sender')
-    .then((chats) => {
-      res.render("chats", { chats: chats });
-    });
 });
 
-
-
-app.get("/contacts", requireLogin, checkNewMsg, function (req, res) {
-  res.render("index");
-  // Contact.find({ user: req.user._id }).lean()
-  //   .populate('user')
-  //   .populate('contacts.contactUser')
-  //   .then((contacts) => {
-  //     res.render("contacts", { contacts: contacts });
-  //   });
-});
-
-
-app.route("/contactus")
+app.route("/contactUs")
   .get(requireLogin, function (req, res) {
-    res.render("contactus");
+    res.render("contactUs");
   })
   .post(requireLogin, function (req, res) {
     const newMessage = new Message({
@@ -289,34 +337,41 @@ app.route("/contactus")
       email: req.body.email,
       message: req.body.message
     });
-    newMessage.save(function (err) {
+    newMessage.save(function (err, message) {
       if (!err) {
         res.render('message', { message: newMessage });
       }
     });
   });
 
-app.get("/discover", requireLogin, checkNewMsg, function (req, res) {
-  User.find({ status: "Active", _id: { $ne: req.user._id } })
-    .sort({ date: 'desc' })
-    .then(users => {
-      res.render("discover", { users: users });
-    }).catch((err) => {
-      console.log(err);
-    });
+app.get('/groupProfile/:id', requireLogin, (req, res) => {
+  let ismyGroup;
+  Group.findById(req.params.id)
+    // .populate('groupLeader')
+    .populate('members')
+    .populate('groupLeader')
+    .then(group => {
+      if (group) {
+        if (group.groupLeader.equals(req.user._id)) { ismyGroup = true; } else { ismyGroup = false; }
+        res.render('group/groupProfile', {
+          group: group,
+          ismyGroup: ismyGroup
+        })
+      }
+    })
 });
 
-app.get("/follow/:id", requireLogin, checkNewMsg, function (req, res) {
-  //first check if the follow user id exists
-  User.findById(req.user._id, (err, user) => {
-    if (err) throw err;
-    user.follows.push(req.params.id);
-    user.save((err, user) => {
-      if (err) throw err;
-      if (user) { res.render('home'); }
-    });
-  });
-
+app.get("/groups", requireLogin, (req, res) => {
+  Group.find({ status: "Active" })
+    .populate('groupLeader')
+    .populate('members')
+    .then(groups => {
+      if (groups) {
+        res.render('group/groups', {
+          groups: groups
+        })
+      }
+    })
 });
 
 app.route("/login")
@@ -334,39 +389,69 @@ app.get("/logout", requireLogin, function (req, res) {
   res.redirect("/");
 });
 
-app.route("/myaccount")
+app.route("/myAccount")
   .get(requireLogin, checkNewMsg, function (req, res) {
-    res.render('myaccount');
+    res.render('myAccount');
   })
   .post(requireLogin, (req, res) => {
-    console.log(req.body.username);
+    // console.log(req.body.username);
     User.findById(req.user._id, (err, user) => {
       if (err) throw err;
       user.username = req.body.username;
       user.email = req.body.email;
       user.status = req.body.status;
       user.save(() => {
-        res.redirect('/myaccount');
+        res.redirect('/myAccount');
       });
     });
   });
 
-app.get('/myposts', requireLogin, checkNewMsg, (req, res) => {
+app.get("/myContacts", requireLogin, function (req, res) {
+  User.findById(req.user._id)
+    .populate('contacts')
+    .then(user => {
+      // user.contacts.splice(0, user.contacts.length);
+      // user.save();
+      res.render('myContacts', {
+        user: user
+      })
+    })
+});
+
+app.get("/myGroup", requireLogin, (req, res) => {
+  Group.findOne({ groupLeader: req.user._id })
+    .populate('members')
+    .populate('groupLeader')
+    .then(group => {
+      res.render('group/groupProfile', {
+        group: group,
+        ismyGroup: true
+      })
+    })
+});
+
+app.get('/myPosts', requireLogin, (req, res) => {
   Post.find({ postUser: req.user._id })
     .populate('postUser')
     .populate('comments.commentUser')
     // .populate('likes.likeUser')
     .then((posts) => {
-      res.render('myposts', {
+      res.render('myPosts', {
         posts: posts
       });
     })
 
 });
 
-app.route("/myprofile")
-  .get(requireLogin, checkNewMsg, (req, res) => {
-    res.render('myprofile');
+app.route("/myProfile")
+  .get(requireLogin, (req, res) => {
+    // let iscontact;
+    let isCurrentUser = true;
+    res.render("profile", {
+      // iscontact: iscontact,
+      isCurrentUser: isCurrentUser
+    });
+
   })
   .post(requireLogin, (req, res) => {
     singleUpload(req, res, (err) => {
@@ -383,20 +468,18 @@ app.route("/myprofile")
           user.education = req.body.education;
           user.profession = req.body.profession;
           user.gender = req.body.gender;
-          user.age = req.body.age;
+          user.yearBorn = req.body.yearBorn;
           user.height = req.body.height;
           user.bodytype = req.body.bodytype;
           user.religion = req.body.religion;
           user.maritalStatus = req.body.maritalStatus;
           user.children = req.body.children;
           user.aboutMe = req.body.aboutMe;
-          user.aboutYou = req.body.aboutYou;
-          user.aboutUs = req.body.aboutUs;
           user.save((err) => {
             if (err) {
               throw err;
             } else {
-              res.redirect('myprofile');
+              res.redirect('myProfile');
             }
           });
         }
@@ -435,7 +518,7 @@ app.route("/postCreate")
         }
         new Post(newPost).save()
           .then(() => {
-            res.redirect('/myposts');
+            res.redirect('/myPosts');
           })
       }
     })
@@ -491,7 +574,7 @@ app.route("/postComment/:id")
       })
   })
 
-app.get('/posts', requireLogin, checkNewMsg, (req, res) => {
+app.get('/posts', requireLogin, (req, res) => {
   let postArray = [];
   User.findById(req.user._id, (err, user) => {
     if (err) throw err;
@@ -555,10 +638,44 @@ app.route("/signup")
     });
   });
 
+app.get("/singles", requireLogin, checkNewMsg, function (req, res) {
+
+  User.find({ status: "Active", _id: { $ne: req.user._id } })
+    .sort({ date: 'desc' })
+    .then(users => {
+      res.render("singles", { users: users });
+    }).catch((err) => {
+      console.log(err);
+    });
+});
+
+app.get('/userPage/:id', requireLogin, (req, res) => {
+  User.findById(req.params.id, (err, user) => {
+    if (err) throw err;
+    let iscontact;
+    User.findById(req.user._id)
+      .then(currentUser => {
+        if (currentUser.contacts.includes(req.params.id)) {
+          iscontact = true;
+        } else {
+          iscontact = false;
+        }
+        res.render("userPage", {
+          user: user,
+          message: null,
+          iscontact: iscontact
+        });
+      })
+  });
+});
+
 app.get('/userProfile/:id', requireLogin, (req, res) => {
   User.findById(req.params.id, (err, user) => {
     if (err) throw err;
-    res.render("userProfile", { oneUser: user });
+    res.render("profile", {
+      user: user,
+      isCurrentUser: false
+    });
 
   });
 });
@@ -572,6 +689,40 @@ app.get('/zipcode', (req, res) => {
 
 });
 
-app.listen(process.env.PORT || 3000, function () {
-  console.log("Server started on port 3000");
+app.get('/temp', (req, res) => {
+  res.render("temp");
+});
+
+const server = http.createServer(app);
+const io = socket(server);
+
+io.on('connection', (socket) => {
+  // console.log('Server is connected to Client');
+  // emit event
+  socket.on('username', function (username) {
+    socket.username = username;
+    io.emit('is_online', '🔵 <i>' + socket.username + ' join the chat..</i>');
+  });
+
+  socket.on('disconnect', function (username) {
+    io.emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
+  })
+
+
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', '<strong>' + socket.username + '</strong>: ' + msg);
+  });
+  // socket.emit('newMessage', {
+  //   title: 'New Message',
+  //   body: 'Hello World!',
+  //   sender: 'Richard'
+  // })
+
+})
+io.on('disconnection', () => {
+  console.log('Server is disconnected from Client');
+})
+
+server.listen(port, function () {
+  console.log(`Server is running on port ${port}`);
 });

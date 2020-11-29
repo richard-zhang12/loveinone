@@ -1,31 +1,33 @@
-<%- include('partials/header') %>
+<%- include('partials/header1') %>
 
-<div class="container mt-3 text-center">
-    <% if (chats) { %>
-    <% chats.forEach(function(chat){ %>
-    <div class="row">
-        <div class="col-sm-6 text-left">
-            <div class="media mt-4">
-                <img src="<%= chat.chatmate.image %>" id="chatImg" class="rounded mr-4"
-                    style="height: 72px; width: 72px;">
+<div class="container mt-3 iForm">
+    <a href="/chatGroup">
+        <button type="button" class="btn btn-link mt-2">New Chat Group</button>
+    </a>
+    <div class="row text-left">
+
+        <% if (chats) { %>
+        <% chats.forEach(function(chat){ %>
+        <a href="/chat/<%= chat._id %>">
+            <div class="media my-2 border-bottom">
                 <% if (chat.gotNewMsg) { %>
-                <i class="fa fa-circle text-danger"></i>
+                <small><i class="fa fa-circle text-danger"></i></small>
                 <% } %>
-                <div style="margin-left: 120px;">
-                        <p><%=chat.chatmate.username%> </p>
-                        <a href="/chat/<%= chat.chatmate._id %>/<%= chat.chatmate.username %>">
-                        <p class="text-left">
-                            <%= iif(chat.messages[chat.messages.length-1].sender._id.toString() === chat.chatmate._id.toString(), chat.chatmate.username+':  ', 'Me:')%>
-                            <%= chat.messages[chat.messages.length-1].message%>
-                        </p>
-                    </a>
+                <img src="<%=chat.image%>" class="mr-3 rounded-circle img-fluid" style="width:50px;height:50px;">
+
+                <div class="media-body mb-2 ">
+                    <h5 class="mt-0"><%=chat.name%></h5>
+                    <%= chat.messages[0].sender.username%>: <%= chat.messages[0].text%>
                 </div>
+
             </div>
-        </div>
+        </a>
+        <!-- <hr> -->
+        <% }); %>
+        <% } %>
+
     </div>
-    <hr>
-    <% }); %>
-    <% } %>
+
 </div>
 
 <%- include('partials/footer') %>

@@ -1,0 +1,106 @@
+<%- include('../partials/header1') %>
+<h3 class="mt-3"> My Group</h3>
+
+<div class="container" id="view">
+
+    <% if (group) { %>
+    <% if (ismyGroup) { %>
+    <button type="button" class="btn btn-secondary" onclick="edit()">Edit</button>
+    <% } else {%>
+    <a href="/chat/<%= group.groupLeader._id %>/<%= group.groupLeader.username%>">
+        <button class="btn btn-outline-success" onclick="myFunction()">
+            Request To Join
+        </button>
+    </a>
+    <% } %>
+    <div class="row">
+        <div class="col-sm-2"> </div>
+        <div class="col-sm-4 window px-3 py-3 border-right">
+            <h5><%=group.groupName%></h5>
+            <p class="text-left mt-3"><%=group.groupDetail%></p>
+        </div>
+        <div class="col-sm-4 window px-3 py-3">
+            Group Leader: <strong><%=group.groupLeader.username%></strong>
+            <hr>
+            <h6>Members</h6>
+            <% group.members.forEach(function(member){ %>
+            <a href="/userProfile/<%= member._id %>" class="">
+                <div class="media">
+                    <img src="<%= member.image %>" class="ml-3" width="30" height="30">
+                    <div class=" media-body">
+                        <p><%=member.username%></p>
+                    </div>
+                </div>
+            </a>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" id="edit" style="display: none">
+    <form method="POST" action="/myGroup" enctype="multipart/form-data" id="uploadForm" onchange="formChange()">
+        <span><button class="btn btn-primary" id="save" type="submit">Save</button></span>
+        <small>*All fieldes are required</small>
+        <div class="row">
+            <div class="col-sm-2"> </div>
+            <div class="col-sm-4 window px-3 py-3">
+                <div class="form-group">
+                    <label for="groupName">Group Name</label>
+                    <input type="text" name="groupName" id="groupName" value="<%=group.groupName%>" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="groupDetail">Group Detail</label>
+                    <textarea rows="5" tabindex="3" name="groupDetail" id="groupDetail" class="form-control"
+                        required><%=group.groupDetail%></textarea>
+                </div>
+            </div>
+            <div class="col-sm-4 window px-3 py-3">
+                <h6>Group groupLeader: <%=group.groupLeader.username%></h6>
+                <h6>Members</h6>
+                <div id="panel" style="height: 250px;">
+                    <% group.members.forEach(function(member){ %>
+                    <div class="media">
+                        <img src="<%= member.image %>" class="mx-3" width="30" height="30">
+                        <!-- <div class="media-body"> -->
+                        <a href="/userProfile/<%= member._id %>" class="">
+                            <p><%=member.username%></p>
+                        </a>
+                        <a href="/groupMemberDelete/<%= member._id %>"><i class="fa fa-trash ml-5"></i></a>
+
+                    </div>
+                    <% }); %>
+                </div>
+                <a href="/chats"><button class="btn btn-outline-primary"><i class="fa fa-user-plus">Add</i></button></a>
+
+            </div>
+        </div>
+    </form>
+</div>
+<% } %>
+
+
+<script>
+    function myFunction() {
+        alert("Request to join the group with the group groupLeader");
+    }
+    function showpic(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#uploadpic')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function edit() {
+        document.getElementById('view').style.display = 'none';
+        document.getElementById('edit').style.display = 'block';
+    }
+</script>
+<%- include('../partials/footer') %>

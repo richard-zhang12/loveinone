@@ -1,0 +1,50 @@
+<%- include('partials/header1') %>
+
+<div class="container iForm">
+    <form method="POST" action="/chatGroup">
+        <h4 class="mt-4">New Group Chat</h4>
+        <p>GroupLeader: <%= user.username %></p>
+        <div class="form-group">
+            <label for="groupName">Group Name</label>
+            <input type="text" name="groupName" id="groupName" class="form-control"
+                required>
+        </div>
+        <!-- <div class="form-group">
+            <label for="groupDetail">Group Detail</label>
+            <textarea rows="3" tabindex="3" name="groupDetail" id="groupDetail" 
+                class="form-control" required></textarea>
+        </div> -->
+        <div class="form-group">
+            <label for="contacts">Invite a contact</label>
+            <% user.contacts.forEach(function(contact){ %>
+            <div class="checkbox text-left">
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="member" value="<%= contact._id%>">
+                    <img src="<%= contact.image %>" class="mx-3 mb-1" width="50" height="50">
+                    <%= contact.username %>
+                </label>
+            </div>
+            <% }); %>
+        </div>
+        <input type="hidden" id="members" name="members">
+        <div class="my-4">
+            <button class="btn btn-primary btn-block" id="submit" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#submit').click(function () {
+            var members = [];
+            $.each($("input[name='member']:checked"), function () {
+                members.push($(this).val());
+            });
+            $('#members').val(members);
+
+        })
+    })
+
+</script>
+
+<%- include('partials/footer') %>

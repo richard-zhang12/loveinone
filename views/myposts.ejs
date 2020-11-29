@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header1') %>
 
 <div class="container mt-3 iForm">
     <h4><a href="#" id="newPost" onclick="displayForm()" style="display:block"><i class="far fa-plus-square">New
@@ -23,7 +23,7 @@
     <% posts.forEach((post) => { %>
     <div class="card mx-0 text-left">
         <p class="mb-0 text-black-50">
-            <img src="<%=post.postUser.image%>" class="rounded-circle mr-2" width="40px" height="40px">
+            <img src="<%=post.postUser.image%>" class="rounded-circle mr-2 img-fluid" width="40px" height="40px">
             <%=post.postUser.username%> - <%= getLastMoment(post.date, 'hour') %>
         </p>
         <p class="ml-2"><%=post.postBody%></p>

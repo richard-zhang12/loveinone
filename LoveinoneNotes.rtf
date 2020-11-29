@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fmodern\fprq1\fcharset0 Lucida Console;}{\f2\fmodern\fprq1 Lucida Console;}{\f3\fnil\fcharset2 Symbol;}}
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fmodern\fprq1 Lucida Console;}{\f2\fmodern\fprq1\fcharset0 Lucida Console;}{\f3\fnil\fcharset2 Symbol;}}
 {\colortbl ;\red0\green0\blue255;\red0\green191\blue0;\red191\green0\blue191;\red191\green191\blue0;}
 {\*\listtable 
 {\list\listhybrid
@@ -22,7 +22,7 @@
 {\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\'02\'07.;}{\levelnumbers\'01;}\jclisttab\tx0}
 {\listlevel\levelnfc23\leveljc1\levelstartat1{\leveltext\'01\'B7;}{\levelnumbers;}\f3\jclisttab\tx0}\listid2 }}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
-{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
 \pard\sa200\sl276\slmult1\f0\fs22\lang9 1.    Start project\par
 
 \pard 
@@ -38,24 +38,31 @@
 
 \pard\sa200\sl276\slmult1 2.    Git \par
 
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 To initiate a git\par
+
+\pard\sa200\sl276\slmult1\tab $ git init\par
+\tab $ git commit -m "first commit"\par
+\tab Sign in to github.com, username: richard_zhang12@yahoo.com\par
+\tab\par
+
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 To update a git\par
+
+\pard\sa200\sl276\slmult1\tab $ git add .\par
+\tab $ git commit -am "second commit"\par
+   \tab $ \f1\fs18 git remote add origin {{\field{\*\fldinst{HYPERLINK https://github.com/loveinone.git }}{\fldrslt{https://github.com/loveinone.git\ul0\cf0}}}}\f0\fs22\par
+\tab $ git push\par
+
 \pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 Solve the following problem\par
 
-\pard\sa200\sl276\slmult1\f1\fs18\lang1033     \f2\lang9 Error: Multiple apps in git remotes\par
+\pard\sa200\sl276\slmult1\f2\fs18\lang1033     \f1\lang9 Error: Multiple apps in git remotes\par
 
-\pard\fi-360\li720\sa200\sl276\slmult1\f1  \'bb      Usage: --remote origin\f2\par
-\f1  \'bb         or: --app loveinone\f2\par
+\pard\fi-360\li720\sa200\sl276\slmult1\f2  \'bb      Usage: --remote origin\f1\par
+\f2  \'bb         or: --app loveinone\f1\par
 
 \pard\sa200\sl276\slmult1\f0\fs22          $ git remote  (currently have two servers: heroku and origin)\par
          heroku\par
          origin\par
-        $ \f2\fs18 git remote remove origin\f1\lang1033   (now the remote server is only heroku)\f2\lang9\par
-
-\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1\f0\fs22 To update a git\par
-
-\pard\sa200\sl276\slmult1\tab $ git add .\par
-\tab $ git commit -am "second commit"\par
-   \tab $ \f2\fs18 git remote add origin {{\field{\*\fldinst{HYPERLINK https://github.com/loveinone.git }}{\fldrslt{https://github.com/loveinone.git\ul0\cf0}}}}\f0\fs22\par
-\tab $ git push\par
+        $ \f1\fs18 git remote remove origin\f2\lang1033   (now the remote server is only heroku)\f0\fs22\lang9\par
 
 \pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 To push to heroku\par
 
@@ -73,12 +80,12 @@
 \pard\sa200\sl276\slmult1 (chat.date.getMonth()+1) + "/" +chat.date.getDate() + "/" +chat.date.getFullYear() + " " +(chat.date.getHours() >= 12? chat.date.getHours()-12 : chat.date.getHours()) + ":" +((chat.date.getMinutes()<10?'0':'')+chat.date.getMinutes()) +(chat.date.getHours() >= 12? 'PM' : 'AM') %>\par
 
 \pard\sa200\sl240\slmult1 4.  Connect to mongodb\par
-\f2\fs24  \f1\lang1033 $ \f2\lang9 mongo "mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test"\par
-\f0\fs22 5.  Mongoimport\f2\fs24\par
+\f1\fs24  \f2\lang1033 $ \f1\lang9 mongo "mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test"\par
+\f0\fs22 5.  Mongoimport\f1\fs24\par
 
-\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl240\slmult1\f1\fs22\lang1033 Establish a path in the computer system.\f2\lang9\par
+\pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl240\slmult1\f2\fs22\lang1033 Establish a path in the computer system.\f1\lang9\par
 
-\pard\sa200\sl240\slmult1\f1\lang1033{\pict{\*\picprop}\wmetafile8\picw11033\pich10186\picwgoal6255\pichgoal5775 
+\pard\sa200\sl240\slmult1\f2\lang1033{\pict{\*\picprop}\wmetafile8\picw11033\pich10186\picwgoal6255\pichgoal5775 
 010009000003aaad0300000094ad03000000050000000b0200000000050000000c02ca27192b94
 ad0300430f2000cc0000008101a10100000000ca27192b0000000028000000a101000081010000
 0100180000000000e45a0700c40e0000c40e00000000000000000000ffffffffffffffffffffff
@@ -12447,18 +12454,16 @@ ffffffffffffff00030000000000
 \pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl240\slmult1\f0 To import into local MongoDB\lang9\par
 
 \pard\sa200\sl240\slmult1\lang1033 Go to the directory where the mongoimport.exe is stored.\lang9\par
-
-\pard\sa200\sl240\slmult1\cf2\b Owner@My-PC \cf3 MINGW64 \cf4 /c/Program Files/MongoDB/Server/4.2/bin\par
+\cf2\b Owner@My-PC \cf3 MINGW64 \cf4 /c/Program Files/MongoDB/Server/4.2/bin\par
 \cf0\b0 Move the zips.json to the same directory as shown above\b\par
 \b0\lang1033 $ \lang9 mongoimport -d \lang1033 test\lang9  -c \lang1033 zip\lang9 s --file \lang1033 zips\lang9 .json\par
 \par
 
 \pard{\pntext\f3\'B7\tab}{\*\pn\pnlvlblt\pnf3\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl240\slmult1\lang1033 To save to MongoDB Atlas \lang9\par
 
-\pard\sa200\sl240\slmult1\lang1033 Move the zips.json to \f2\fs18  C:\\Users\\Owner\\zips.json\f0\fs22\lang9\par
+\pard\sa200\sl240\slmult1\lang1033 Move the zips.json to \f1\fs18  C:\\Users\\Owner\\zips.json\f0\fs22\lang9\par
 \lang1033 $ \lang9 mongoimport --uri "mongodb+srv://onlinedatingapp:Wanglin12@onlinedatingapp-otcyj.mongodb.net/test" -c zips --drop --file \lang1033 ~\lang9 /zips.json\par
-
-\pard\sa200\sl240\slmult1\par
+\par
 \par
 \par
 \par

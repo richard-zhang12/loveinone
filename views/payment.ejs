@@ -7,7 +7,7 @@
             <h4 class="mt-4">1 Month</h4>
             <p>One month for $15</p>
     
-            <form class="mb-4" action="/chargeOneMonth" method="POST">
+            <form class="mb-4" action="/chargeOneMonth/<%=chatId%>" method="POST">
                 <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="<%=StripePublishableKey%>" data-amount="1500" data-name="Love-In-One"
                     data-description="$15 for one month" data-image="/img/love.jpg" data-locale="auto">
